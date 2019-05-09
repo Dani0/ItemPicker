@@ -14,10 +14,7 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.ScrollView
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.StringRes
 
 class ItemPicker<T> : ScrollView {
@@ -68,7 +65,11 @@ class ItemPicker<T> : ScrollView {
         this.views.orientation = LinearLayout.VERTICAL
         this.addView(views)
 
-        scrollerTask = Runnable {
+        scrollerTask = getScrollerTask()
+    }
+
+    private fun getScrollerTask(): Runnable {
+        return Runnable {
             val newY = scrollY
             if (initialY - newY == 0) { // stopped
                 val remainder = initialY % itemHeight
@@ -125,14 +126,12 @@ class ItemPicker<T> : ScrollView {
         tv.setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
         if (0 == itemHeight) {
             itemHeight = getViewMeasuredHeight(tv)
-            views.layoutParams =
-                FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, itemHeight * displayItemCount)
+            views.layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, itemHeight * displayItemCount)
             val lp = this.layoutParams as LinearLayout.LayoutParams
             this.layoutParams = LinearLayout.LayoutParams(lp.width, itemHeight * displayItemCount)
         }
         return tv
     }
-
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
@@ -342,7 +341,9 @@ class ItemPicker<T> : ScrollView {
 
     fun withView(view: View): ItemPicker<T> {
         dialogBuilder.setView(view)
+        var a : NumberPicker
         return this
+
     }
 
     fun show() {
